@@ -7,7 +7,7 @@ const dbUrl = 'mongodb://127.0.0.1:27017/placement_demo';
 const sampleStudents = [
   {
     name: 'Ayesha Khan',
-    roll: 'CSE001',
+    roll: '22ucs001',
     department: 'CSE',
     cgpa: 8.6,
     placed: true,
@@ -16,14 +16,14 @@ const sampleStudents = [
   },
   {
     name: 'Rahul Mehta',
-    roll: 'CSE002',
+    roll: '22ucs002',
     department: 'CSE',
     cgpa: 7.9,
     placed: false
   },
   {
     name: 'Priya Sharma',
-    roll: 'ECE003',
+    roll: '22uec003',
     department: 'ECE',
     cgpa: 8.1,
     placed: true,
@@ -32,15 +32,15 @@ const sampleStudents = [
   },
   {
     name: 'Sanjay Patil',
-    roll: 'ME004',
+    roll: '22ume004',
     department: 'ME',
     cgpa: 7.2,
     placed: false
   },
   {
     name: 'Neha Verma',
-    roll: 'EEE005',
-    department: 'EEE',
+    roll: '22ucc005',
+    department: 'CCE',
     cgpa: 8.0,
     placed: true,
     company: 'Wipro',
@@ -48,14 +48,14 @@ const sampleStudents = [
   },
   {
     name: 'Arjun Rao',
-    roll: 'CIV006',
-    department: 'CIVIL',
+    roll: '22ucs006',
+    department: 'CSE',
     cgpa: 6.9,
     placed: false
   },
   {
     name: 'Meera Joshi',
-    roll: 'ECE007',
+    roll: '22uec007',
     department: 'ECE',
     cgpa: 9.1,
     placed: true,
@@ -64,7 +64,7 @@ const sampleStudents = [
   },
   {
     name: 'Karthik Iyer',
-    roll: 'ME008',
+    roll: '22ume008',
     department: 'ME',
     cgpa: 7.5,
     placed: true,
@@ -73,7 +73,7 @@ const sampleStudents = [
   },
   {
     name: 'Pooja Nair',
-    roll: 'CSE009',
+    roll: '22ucs067',
     department: 'CSE',
     cgpa: 8.3,
     placed: true,
@@ -82,8 +82,8 @@ const sampleStudents = [
   },
   {
     name: 'Vikram Singh',
-    roll: 'EEE010',
-    department: 'EEE',
+    roll: '22ucc089',
+    department: 'CCE',
     cgpa: 6.8,
     placed: false
   }

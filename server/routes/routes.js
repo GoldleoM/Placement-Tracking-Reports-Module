@@ -8,9 +8,9 @@ const router = express.Router();
 router.get('/api/placed', async (req, res) => {
   try {
     const studentList = await Student.find({ placed: true }).select('name roll company package');
-    res.json({ ok: true, data: studentList });
+    return res.json({ ok: true, data: studentList });
   } catch (err) {
-    res.status(500).json({ ok: false, message: 'Failed to fetch placed students' });
+    return res.status(500).json({ ok: false, message: 'Failed to fetch placed students' });
   }
 });
 
@@ -18,7 +18,7 @@ router.get('/api/placed', async (req, res) => {
 router.get('/api/unplaced', async (req, res) => {
   try {
     const studentList = await Student.find({ placed: false }).select('name roll department cgpa');
-    res.json({ ok: true, data: studentList });
+    return res.json({ ok: true, data: studentList });
   } catch (err) {
     res.status(500).json({ ok: false, message: 'Failed to fetch unplaced students' });
   }
@@ -31,7 +31,7 @@ router.get('/api/stats', async (req, res) => {
     const placedCount = await Student.countDocuments({ placed: true });
     const percentage = totalCount === 0 ? 0 : Math.round((placedCount / totalCount) * 100);
 
-    res.json({
+    return res.json({
       ok: true,
       data: {
         totalStudents: totalCount,
@@ -40,7 +40,7 @@ router.get('/api/stats', async (req, res) => {
       }
     });
   } catch (err) {
-    res.status(500).json({ ok: false, message: 'Failed to fetch stats' });
+    return res.status(500).json({ ok: false, message: 'Failed to fetch stats' });
   }
 });
 
@@ -82,9 +82,9 @@ router.get('/api/company-report', async (req, res) => {
       await Company.bulkWrite(bulkOps);
     }
 
-    res.json({ ok: true, data: resultList });
+    return res.json({ ok: true, data: resultList });
   } catch (err) {
-    res.status(500).json({ ok: false, message: 'Failed to fetch company report' });
+    return res.status(500).json({ ok: false, message: 'Failed to fetch company report' });
   }
 });
 
@@ -118,9 +118,9 @@ router.get('/api/department-report', async (req, res) => {
       unplaced: row.unplaced
     }));
 
-    res.json({ ok: true, data: resultList });
+    return res.json({ ok: true, data: resultList });
   } catch (err) {
-    res.status(500).json({ ok: false, message: 'Failed to fetch department report' });
+    return res.status(500).json({ ok: false, message: 'Failed to fetch department report' });
   }
 });
 

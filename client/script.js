@@ -99,6 +99,7 @@ async function getPlacedStudents() {
       resultBox.innerHTML = '<p class="note">No placed students found.</p>';
           return;
     }
+    data.data.sort((a, b) => a.package - b.package);
 
     const rows = data.data.map((s) => [
       s.name,
@@ -127,7 +128,7 @@ async function getUnplacedStudents() {
       resultBox.innerHTML = '<p class="note">No unplaced students found.</p>';
           return;
     }
-
+    data.data.sort((a, b) => a.cgpa - b.cgpa);
     const rows = data.data.map((s) => [
       s.name,
       s.roll,
@@ -155,6 +156,7 @@ async function getCompanyReport() {
       resultBox.innerHTML = '<p class="note">No company data found.</p>';
           return;
     }
+    data.data.sort((a,b) => a.company.localeCompare(b.company));
 
     const rows = data.data.map((r) => [
       r.company,
@@ -182,7 +184,7 @@ async function getDepartmentReport() {
       resultBox.innerHTML = '<p class="note">No department data found.</p>';
           return;
     }
-
+    data.data.sort((a,b) => a.department.localeCompare(b.department));
     const rows = data.data.map((r) => [
       r.department,
       r.total,
