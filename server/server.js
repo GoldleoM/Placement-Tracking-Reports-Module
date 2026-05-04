@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 });
 
 // connect db and start
-const dbUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/placement_demo';
+const dbUrl = "mongodb://127.0.0.1:27017/placement_demo";
 
 mongoose
   .connect(dbUrl)

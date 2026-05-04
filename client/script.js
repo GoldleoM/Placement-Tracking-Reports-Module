@@ -160,8 +160,13 @@ async function getCompanyReport() {
       return;
     }
 
-    const rows = data.data.map((r) => [r.company, r.placedCount, '<span class="badge green">Placed</span>']);
-    resultBox.innerHTML = makeTable(['Company', 'Placed Students', 'Status'], rows);
+    const rows = data.data.map((r) => [
+      r.company,
+      r.placedCount,
+      r.avgPackage ?? '-',
+      '<span class="badge green">Placed</span>'
+    ]);
+    resultBox.innerHTML = makeTable(['Company', 'Placed Students', 'Avg Package (LPA)', 'Status'], rows);
     resultBox.classList.add('fade-in');
   } catch (err) {
     showError('Failed to load company report');
@@ -189,9 +194,8 @@ async function getDepartmentReport() {
       r.total,
       r.placed,
       r.unplaced,
-      '<span class="badge gray">Report</span>'
     ]);
-    resultBox.innerHTML = makeTable(['Department', 'Total', 'Placed', 'Unplaced', 'Type'], rows);
+    resultBox.innerHTML = makeTable(['Department', 'Total', 'Placed', 'Unplaced'], rows);
     resultBox.classList.add('fade-in');
   } catch (err) {
     showError('Failed to load department report');

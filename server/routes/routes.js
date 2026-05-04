@@ -1,5 +1,6 @@
 const express = require('express');
 const Student = require('../models/Student');
+const Company = require('../models/Company');
 
 const router = express.Router();
 
@@ -48,14 +49,38 @@ router.get('/company-report', async (req, res) => {
   try {
     const report = await Student.aggregate([
       { $match: { placed: true, company: { $ne: null } } },
-      { $group: { _id: '$company', count: { $sum: 1 } } },
+      {
+        $group: {
+          _id: '$company',
+          count: { $sum: 1 },
+          avgPackage: { $avg: '$package' }
+        }
+      },
       { $sort: { count: -1 } }
     ]);
 
     const resultList = report.map((row) => ({
       company: row._id,
-      placedCount: row.count
+      placedCount: row.count,
+      avgPackage: row.avgPackage ? Number(row.avgPackage.toFixed(2)) : 0
     }));
+
+    if (resultList.length > 0) {
+      const bulkOps = resultList.map((row) => ({
+        updateOne: {
+          filter: { name: row.company },
+          update: {
+            $set: {
+              name: row.company,
+              avgPackage: row.avgPackage,
+              placedCount: row.placedCount
+            }
+          },
+          upsert: true
+        }
+      }));
+      await Company.bulkWrite(bulkOps);
+    }
 
     res.json({ ok: true, data: resultList });
   } catch (err) {

@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const Student = require('./models/Student');
+const Student = require('./server/models/Student');
+const Company = require('./server/models/Company');
 
-const dbUrl = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/placement_demo';
+const dbUrl = 'mongodb://127.0.0.1:27017/placement_demo';
 
 const sampleStudents = [
   {
@@ -95,6 +96,29 @@ async function seedData() {
 
     await Student.deleteMany({});
     await Student.insertMany(sampleStudents);
+
+    const report = await Student.aggregate([
+      { $match: { placed: true, company: { $ne: null } } },
+      {
+        $group: {
+          _id: '$company',
+          count: { $sum: 1 },
+          avgPackage: { $avg: '$package' }
+        }
+      },
+      { $sort: { count: -1 } }
+    ]);
+
+    const companies = report.map((row) => ({
+      name: row._id,
+      placedCount: row.count,
+      avgPackage: row.avgPackage ? Number(row.avgPackage.toFixed(2)) : 0
+    }));
+
+    await Company.deleteMany({});
+    if (companies.length > 0) {
+      await Company.insertMany(companies);
+    }
 
     console.log('Sample students inserted');
   } catch (err) {

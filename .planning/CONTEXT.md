@@ -12,3 +12,4 @@ Decisions:
 - Serve frontend as static files from server/../client for easy demo
 - Use basic aggregation for reports; keep responses simple JSON
 - Provide seed script to insert demo data
+- Add Company model (name, avgPackage, placedCount) synced from Student aggregates for company report
