@@ -4,35 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Placement Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="page">
     <header class="top">
-      <div class="title-block">
+      <div class="title">
         <h1>Placement Dashboard</h1>
         <p class="sub">Track placed and unplaced students with quick reports.</p>
       </div>
-      <div class="meta">Placement Cell | Demo Module</div>
+      <div class="side-title">Training & Placement Cell</div>
     </header>
 
     <section class="panel">
       <aside class="controls">
         <div class="panel-title">Quick Actions</div>
-        <button id="btnStats" class="btn btn-stats">View Stats</button>
-        <button id="btnPlaced" class="btn btn-placed">View Placed Students</button>
-        <button id="btnUnplaced" class="btn btn-unplaced">View Unplaced Students</button>
-        <button id="btnCompany" class="btn btn-company">Company Report</button>
-        <button id="btnDept" class="btn btn-dept">Department Report</button>
+        <button id="btnStats">View Stats</button>
+        <button id="btnPlaced">View Placed Students</button>
+        <button id="btnUnplaced">View Unplaced Students</button>
+        <button id="btnCompany">Company Report</button>
+        <button id="btnDept">Department Report</button>
         <div class="hint">Click a button to load data.</div>
       </aside>
 
       <section class="content">
-        <div id="resultTitle" class="result-title">Select a report to view</div>
-        <div id="resultBox" class="result-box"></div>
+        <div id="resultTitle">Select a report to view</div>
+        <div id="resultBox"></div>
       </section>
     </section>
 

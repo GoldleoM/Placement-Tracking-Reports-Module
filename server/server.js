@@ -6,14 +6,14 @@ const path = require('path');
 const apiRoutes = require('./routes/routes');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 
 // simple middleware
 app.use(cors());
 app.use(express.json());
 
 // api routes
-app.use('/api', apiRoutes);
+app.use(apiRoutes);
 
 // serve client files
 app.use(express.static(path.join(__dirname, '..', 'client')));

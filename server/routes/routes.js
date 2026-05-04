@@ -4,8 +4,8 @@ const Company = require('../models/Company');
 
 const router = express.Router();
 
-// get all placed students
-router.get('/placed', async (req, res) => {
+//placed
+router.get('/api/placed', async (req, res) => {
   try {
     const studentList = await Student.find({ placed: true }).select('name roll company package');
     res.json({ ok: true, data: studentList });
@@ -14,8 +14,8 @@ router.get('/placed', async (req, res) => {
   }
 });
 
-// get all unplaced students
-router.get('/unplaced', async (req, res) => {
+//unplaced
+router.get('/api/unplaced', async (req, res) => {
   try {
     const studentList = await Student.find({ placed: false }).select('name roll department cgpa');
     res.json({ ok: true, data: studentList });
@@ -24,8 +24,8 @@ router.get('/unplaced', async (req, res) => {
   }
 });
 
-// placement stats
-router.get('/stats', async (req, res) => {
+//stats
+router.get('/api/stats', async (req, res) => {
   try {
     const totalCount = await Student.countDocuments();
     const placedCount = await Student.countDocuments({ placed: true });
@@ -44,8 +44,8 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-// company-wise report
-router.get('/company-report', async (req, res) => {
+// company wise report
+router.get('/api/company-report', async (req, res) => {
   try {
     const report = await Student.aggregate([
       { $match: { placed: true, company: { $ne: null } } },
@@ -88,8 +88,8 @@ router.get('/company-report', async (req, res) => {
   }
 });
 
-// department-wise report
-router.get('/department-report', async (req, res) => {
+// department wise report
+router.get('/api/department-report', async (req, res) => {
   try {
     const report = await Student.aggregate([
       {

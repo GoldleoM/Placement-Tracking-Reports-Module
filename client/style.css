@@ -19,7 +19,7 @@
 }
 
 body {
-  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   background: radial-gradient(circle at top left, #f9fbff 0%, #eef2f6 55%, #e9edf2 100%);
   color: var(--text);
   min-height: 100vh;
@@ -54,13 +54,40 @@ body {
   color: var(--muted);
 }
 
-.meta {
+.side-title {
   font-size: 14px;
   color: var(--muted);
   background: var(--soft);
   border: 1px solid var(--border);
   padding: 8px 14px;
   border-radius: 16px;
+}
+
+.table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.table th {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px;
+  text-align: left;
+}
+
+.table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.table tr:nth-child(even) {
+  background-color: #fafafa;
 }
 
 .panel {
@@ -89,7 +116,7 @@ body {
   font-size: 16px;
 }
 
-.btn {
+.controls button {
   border: 1px solid var(--border);
   background: var(--card);
   padding: 12px 16px;
@@ -100,32 +127,32 @@ body {
   transition: background 0.2s ease, border 0.2s ease, transform 0.1s ease;
 }
 
-.btn:hover {
+.controls button:hover {
   background: #f0f4f8;
   border-color: #cfd8e3;
 }
 
-.btn:active {
+.controls button:active {
   transform: translateY(1px);
 }
 
-.btn-stats {
+#btnStats {
   border-left: 4px solid var(--accent-blue);
 }
 
-.btn-placed {
+#btnPlaced {
   border-left: 4px solid var(--accent-green);
 }
 
-.btn-unplaced {
+#btnUnplaced {
   border-left: 4px solid var(--accent-orange);
 }
 
-.btn-company {
+#btnCompany {
   border-left: 4px solid var(--accent-gray);
 }
 
-.btn-dept {
+#btnDept {
   border-left: 4px solid var(--accent-gray);
 }
 
@@ -145,18 +172,18 @@ body {
   height: 100%;
 }
 
-.result-title {
+#resultTitle {
   font-weight: 600;
   margin-bottom: 14px;
   font-size: 16px;
 }
 
-.result-box {
+#resultBox {
   flex: 1;
   min-height: 0;
 }
 
-.result-box.fade-in {
+#resultBox.fade-in {
   animation: fadeIn 0.25s ease-in;
 }
 
