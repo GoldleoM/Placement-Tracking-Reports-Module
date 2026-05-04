@@ -1,130 +1,44 @@
-# Placement Tracking & Reports Module
+# Placement Dashboard (Placement Tracking and Reports Module)
 
-Simple, demo-ready placement module for a college placement system. It tracks placed/unplaced students and generates basic reports from MongoDB. The UI is a single HTML page with buttons that call REST APIs.
+Demo-ready placement tracking dashboard for a college placement system. It stores student records in MongoDB, exposes REST APIs for reports, and serves a single-page UI that renders tables, stats cards, and a pie chart.
 
 ## Tech Stack
 
 - Backend: Node.js, Express, Mongoose
 - Database: MongoDB
 - Frontend: HTML, CSS, Vanilla JavaScript
+- Charts: Chart.js (CDN)
 
-## How to Run
+## Key Features
 
-1) Install dependencies
+- Placed and unplaced student lists
+- Placement statistics with cards and progress bars
+- Pie chart for placed vs unplaced students
+- Company-wise report (count + average package)
+- Department-wise report (total/placed/unplaced)
+- Seed script with sample data
 
-```
-npm install
-```
+## How It Works (Flow)
 
-2) Start MongoDB
-
-Make sure MongoDB is running locally at `mongodb://127.0.0.1:27017`.
-
-3) Seed sample data
-
-```
-npm run seed
-```
-
-4) Start the server
-
-```
-npm start
-```
-
-5) Open the app
-
-Visit `http://localhost:3000` in your browser.
-
-## Environment Variables
-
-- `MONGO_URL`: override MongoDB connection string
-- `PORT`: change server port (default `3000`)
-
-Example:
-
-```
-set MONGO_URL=mongodb://127.0.0.1:27017/placement_demo
-set PORT=3000
-npm start
-```
-
-## Project Structure (with purpose)
-
-```
-placement-module/
-│── server/
-│   ├── server.js         # Express app setup, middleware, static client, DB connect
-│   ├── seed.js           # Inserts sample student data into MongoDB
-│   ├── models/
-│   │   └── Student.js    # Mongoose schema + model for students collection
-│   └── routes/
-│       └── routes.js     # REST API routes for reports and lists
-│
-│── client/
-│   ├── index.html        # UI layout and buttons
-│   ├── style.css         # Basic styling for page and tables
-│   └── script.js         # Fetch calls and DOM rendering
-│
-│── package.json          # App metadata and npm scripts
-│── README.md             # Project documentation
-```
-
-## Data Model
-
-Collection: `students`
-
-Fields:
-
-- `name` (String)
-- `roll` (String)
-- `department` (String)
-- `cgpa` (Number)
-- `placed` (Boolean)
-- `company` (String, optional)
-- `package` (Number, optional, LPA)
+1) Express serves the static UI from `client/` and exposes REST routes.
+2) The UI buttons call API endpoints using `fetch()` (base path `/api`).
+3) Mongoose queries and aggregations compute lists and reports.
+4) The UI renders tables and charts based on API responses.
 
 ## REST API Endpoints
 
-Base path: `/api`
+Routes are defined with the `/api` prefix directly in `server/routes/routes.js` and mounted with `app.use(apiRoutes)`.
 
-1) **GET `/api/placed`**
+1) GET `/api/placed`
+   - Returns placed students with `name`, `roll`, `company`, `package`.
 
-Returns students where `placed = true`.
+2) GET `/api/unplaced`
+   - Returns unplaced students with `name`, `roll`, `department`, `cgpa`.
 
-Response shape:
+3) GET `/api/stats`
+   - Returns counts and placement percentage:
 
-```
-{
-  "ok": true,
-  "data": [
-    { "name": "Ayesha Khan", "roll": "CSE001", "company": "TCS", "package": 4.5 }
-  ]
-}
-```
-
-2) **GET `/api/unplaced`**
-
-Returns students where `placed = false`.
-
-Response shape:
-
-```
-{
-  "ok": true,
-  "data": [
-    { "name": "Rahul Mehta", "roll": "CSE002", "department": "CSE", "cgpa": 7.9 }
-  ]
-}
-```
-
-3) **GET `/api/stats`**
-
-Returns total students, total placed, and placement percentage.
-
-Response shape:
-
-```
+```json
 {
   "ok": true,
   "data": {
@@ -135,56 +49,127 @@ Response shape:
 }
 ```
 
-4) **GET `/api/company-report`**
+4) GET `/api/company-report`
+   - Aggregates placed students by company and calculates average package.
 
-Returns number of placed students per company.
+5) GET `/api/department-report`
+   - Aggregates totals and placed/unplaced counts per department.
 
-Response shape:
+All endpoints return `{ ok: true, data: ... }` on success and `{ ok: false, message: ... }` on error.
 
-```
-{
-  "ok": true,
-  "data": [
-    { "company": "TCS", "placedCount": 2 },
-    { "company": "Infosys", "placedCount": 1 }
-  ]
-}
-```
+## Data Model
 
-5) **GET `/api/department-report`**
+Collection: `students`
 
-Returns total students per department with placed/unplaced split.
+Student fields:
+- `name` (String)
+- `roll` (String)
+- `department` (String)
+- `cgpa` (Number)
+- `placed` (Boolean)
+- `company` (String, optional)
+- `package` (Number, optional, LPA)
 
-Response shape:
+Company fields (used for report caching and display):
+- `name` (String)
+- `avgPackage` (Number)
+- `placedCount` (Number)
 
-```
-{
-  "ok": true,
-  "data": [
-    { "department": "CSE", "total": 3, "placed": 2, "unplaced": 1 }
-  ]
-}
-```
+## Report Logic (Backend)
+
+- Placed/Unplaced: `Student.find({ placed: true/false })`
+- Stats: `countDocuments()` for total and placed, then percentage = placed/total * 100
+- Company report: aggregation with `$match` + `$group` + `$avg` + `$sort`
+- Department report: `$group` with conditional sums for placed/unplaced
+
+The company report also upserts the summary into the `companies` collection using `bulkWrite`.
 
 ## Frontend Behavior
 
-- Buttons call the respective API routes using `fetch()`
-- Tables show student lists and reports
-- Stats are shown as simple text lines
+- Buttons call the API and render results in `#resultBox`
+- Tables show lists and reports
+- Stats view shows cards + progress bars + pie chart
+- Pie chart uses Chart.js and renders on demand
 
-## Seeding Dummy Data
+## How to Run
 
-Run:
+1) Install dependencies
+```
+npm install
+```
 
+2) Start MongoDB
+Ensure MongoDB is running locally at `mongodb://127.0.0.1:27017/placement_demo`.
+
+3) Seed sample data
 ```
 npm run seed
 ```
 
-This clears the `students` collection and inserts sample rows from `server/seed.js`.
+4) Start the server
+```
+npm start
+```
 
-## Notes for Teammates
+5) Open the app
+Visit `http://localhost:3000` in your browser.
 
-- The frontend is served by Express as static files from `client/`.
-- API routes are mounted under `/api` in `server/server.js`.
-- If you change API paths, update `client/script.js` as well.
-- Keep changes simple and readable for demo use.
+## Configuration
+
+This project uses hardcoded values. To change them:
+
+- MongoDB URL: update `dbUrl` in `server/server.js` and `seed.js`
+- Port: update `PORT` in `server/server.js`
+
+## Project Structure (Current)
+
+```
+WP/
+├── client/
+│   ├── index.html        # UI layout and buttons
+│   ├── script.js         # Fetch calls, DOM rendering, Chart.js
+│   └── style.css         # Page layout, cards, tables, chart styling
+├── server/
+│   ├── models/
+│   │   ├── Company.js    # Company summary schema
+│   │   └── Student.js    # Student schema
+│   ├── routes/
+│   │   └── routes.js     # REST API routes
+│   └── server.js         # Express app, middleware, static client, DB connect
+├── seed.js               # Inserts sample student data into MongoDB
+├── package.json          # App metadata and npm scripts
+└── README.md             # Project documentation
+```
+
+## Viva Summary (Quick Study Notes)
+
+- Problem statement: track placement status of students and generate reports for placement cell.
+- Architecture: single-page UI + Express API + MongoDB (Mongoose).
+- Data flow: UI button -> fetch API -> DB query/aggregation -> JSON -> UI renders table/cards/chart.
+- Key reports: placed list, unplaced list, stats, company report, department report.
+- Stats math: placementPercentage = (totalPlaced / totalStudents) * 100.
+- Charting: Chart.js pie chart shows placed vs unplaced counts.
+- Error handling: API returns `{ ok: false, message }` and UI shows a note.
+- Seeding: `seed.js` clears and inserts sample data to demo the reports.
+- Limitations: no auth, no pagination, no filters; designed for demo use.
+- Future scope: add search, filters, pagination, export to CSV, auth/admin panel.
+
+## Common Viva Questions (Short Answers)
+
+Q: Why MongoDB?
+A: Flexible schema, fast setup for demo data, easy aggregation support.
+
+Q: Why Mongoose?
+A: Adds schemas, validation, and cleaner query/aggregation syntax in Node.js.
+
+Q: How is the company report calculated?
+A: Aggregation pipeline groups placed students by company, counts them, and averages package.
+
+Q: How is department report calculated?
+A: Aggregation groups by department and uses conditional sums for placed/unplaced.
+
+Q: How does the UI get data?
+A: Vanilla JS `fetch()` calls to `/api/*` endpoints and renders HTML tables/cards.
+
+Q: How is the pie chart drawn?
+A: Chart.js renders a pie chart using placed and unplaced counts from `/api/stats`.
